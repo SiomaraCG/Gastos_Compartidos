@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var db = require('./conexions/mongo');
 var gastoRoutes = require('./routes/gastoRoutes')
+var transaccionRoutes = require('./routes/transaccionRoutes')
+var balanceRoutes = require('./routes/balanceRoutes')
 
 var app = express();
 
@@ -24,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', gastoRoutes);
+app.use('/api', transaccionRoutes);
+app.use('/api', balanceRoutes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
