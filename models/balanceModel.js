@@ -25,8 +25,12 @@ BalanceSchema.methods.updateGastosTotales = async function() {
 
   this.gastosTotales = gastos.length > 0 ? gastos[0].total : 0;
   this.balancefn = this.presupuesto - this.gastosTotales;
-  await this.save();
 };
+
+BalanceSchema.pre('save', async function(next) {
+  await this.updateGastosTotales();
+  next();
+});
 
 const Balance = mongoose.model('Balance', BalanceSchema);
 
