@@ -1,4 +1,4 @@
-const Balance = require('../model/balanceModel');
+const Balance = require('../models/balanceModel');
 
 exports.createBalance = async (req, res) => {
   try {

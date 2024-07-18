@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const balanceController = require('../controllers/balanceController');
+const balanceController = require('../controllers/balanceControllers');
 
 router.post('/balances', balanceController.createBalance);
 router.post('/balances/all', balanceController.getAllBalances); // Cambiado de GET a POST
