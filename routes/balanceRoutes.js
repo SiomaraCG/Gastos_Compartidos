@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const balanceController = require('../controllers/balanceControllers');
 
+// Asegúrate de que estas funciones existen en balanceController
 router.post('/balances', balanceController.createBalance);
 router.post('/balances/all', balanceController.getAllBalances); // Cambiado de GET a POST
 router.post('/balances/:id', balanceController.getBalanceById); // Cambiado de GET a POST

@@ -15,11 +15,17 @@ const BalanceSchema = new mongoose.Schema({
       return this.presupuesto - this.gastosTotales;
     },
   },
+  grupo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Grupo',
+    required: true,
+  },
 });
 
 BalanceSchema.methods.updateGastosTotales = async function() {
   const Gasto = mongoose.model('Gasto');
   const gastos = await Gasto.aggregate([
+    { $match: { grupo: this.grupo } }, // Filtra los gastos por el grupo específico
     { $group: { _id: null, total: { $sum: '$precio' } } }
   ]);
 

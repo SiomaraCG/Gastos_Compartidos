@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const expenseController = require('../controllers/autentificacionControllers');
+const autentificacionController = require('../controllers/autentificacionControllers');
 
-router.post('/autentificaciones', expenseController.createExpense);
-router.post('/autentificaciones/all', expenseController.getAllExpenses); // Cambiado de GET a POST
-router.post('/autentificaciones/:id', expenseController.getExpenseById); // Cambiado de GET a POST
-router.put('/autentificaciones/:id', expenseController.updateExpense);
-router.delete('/autentificaciones/:id', expenseController.deleteExpense);
+router.post('/autentificaciones', autentificacionController.createAutentificacion);
+router.post('/autentificaciones/all', autentificacionController.getAllAutentificaciones); // Cambiado de GET a POST
+router.post('/autentificaciones/:id', autentificacionController.getAutentificacionById); // Cambiado de GET a POST
+router.put('/autentificaciones/:id', autentificacionController.updateAutentificacion);
+router.delete('/autentificaciones/:id', autentificacionController.deleteAutentificacion);
 
 module.exports = router;

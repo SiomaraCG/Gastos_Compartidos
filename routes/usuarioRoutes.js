@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const expenseController = require('../controllers/usuarioControllers');
+const userController = require('../controllers/usuarioControllers');
 
-router.post('/usuarios', expenseController.createExpense);
-router.post('/usuarios/all', expenseController.getAllExpenses); // Cambiado de GET a POST
-router.post('/usuarios/:id', expenseController.getExpenseById); // Cambiado de GET a POST
-router.put('/usuarios/:id', expenseController.updateExpense);
-router.delete('/usuarios/:id', expenseController.deleteExpense);
+router.post('/usuarios', userController.createUser);
+router.post('/usuarios/all', userController.getAllUsers); 
+router.post('/usuarios/:id', userController.getUserById); 
+router.put('/usuarios/:id', userController.updateUser);
+router.delete('/usuarios/:id', userController.deleteUser);
 
 module.exports = router;

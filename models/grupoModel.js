@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Usuario = require('./usuarioModel');
 
 const GrupoSchema = new mongoose.Schema({
   nombre: {
@@ -9,10 +10,11 @@ const GrupoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  integrantes: {
-    type: String,
+  integrantes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
     required: true,
-  },
+  }],
 });
 
 const Grupo = mongoose.model('Grupo', GrupoSchema);

@@ -1,13 +1,21 @@
 const Gasto = require('../models/gastoModel');
+const Grupo = require('../models/grupoModel'); 
 
 exports.createExpense = async (req, res) => {
   try {
-    const { nombre, precio, nCuotas } = req.body;
+    const { nombre, precio, nCuotas, grupo } = req.body;
+
+    // Verifica que el grupo exista en la base de datos
+    const grupoExistente = await Grupo.findById(grupo);
+    if (!grupoExistente) {
+      return res.status(400).json({ error: 'Grupo no encontrado' });
+    }
 
     const nuevoGasto = new Gasto({
       nombre,
       precio,
       nCuotas,
+      grupo,
     });
 
     const gasto = await nuevoGasto.save();
@@ -19,7 +27,7 @@ exports.createExpense = async (req, res) => {
 
 exports.getAllExpenses = async (req, res) => {
   try {
-    const gastos = await Gasto.find();
+    const gastos = await Gasto.find().populate('grupo');
     res.status(200).json(gastos);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -28,7 +36,7 @@ exports.getAllExpenses = async (req, res) => {
 
 exports.getExpenseById = async (req, res) => {
   try {
-    const gasto = await Gasto.findById(req.params.id);
+    const gasto = await Gasto.findById(req.params.id).populate('grupo');
     if (!gasto) return res.status(404).json({ error: 'Gasto no encontrado' });
     res.status(200).json(gasto);
   } catch (err) {
@@ -38,7 +46,15 @@ exports.getExpenseById = async (req, res) => {
 
 exports.updateExpense = async (req, res) => {
   try {
-    const gasto = await Gasto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { nombre, precio, nCuotas, grupo } = req.body;
+
+    // Verifica que el grupo exista en la base de datos
+    const grupoExistente = await Grupo.findById(grupo);
+    if (!grupoExistente) {
+      return res.status(400).json({ error: 'Grupo no encontrado' });
+    }
+
+    const gasto = await Gasto.findByIdAndUpdate(req.params.id, { nombre, precio, nCuotas, grupo }, { new: true }).populate('grupo');
     if (!gasto) return res.status(404).json({ error: 'Gasto no encontrado' });
     res.status(200).json({ message: 'Gasto actualizado exitosamente', gasto });
   } catch (err) {

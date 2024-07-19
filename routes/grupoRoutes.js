@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const expenseController = require('../controllers/grupoControllers');
+const grupoController = require('../controllers/grupoControllers');
 
-router.post('/grupos', expenseController.createExpense);
-router.post('/grupos/all', expenseController.getAllExpenses); // Cambiado de GET a POST
-router.post('/grupos/:id', expenseController.getExpenseById); // Cambiado de GET a POST
-router.put('/grupos/:id', expenseController.updateExpense);
-router.delete('/grupos/:id', expenseController.deleteExpense);
+router.post('/grupos', grupoController.createGroup);
+router.post('/grupos/all', grupoController.getAllGroups); // Cambiado de GET a POST
+router.post('/grupos/:id', grupoController.getGroupById); // Cambiado de GET a POST
+router.put('/grupos/:id', grupoController.updateGroup);
+router.delete('/grupos/:id', grupoController.deleteGroup);
 
 module.exports = router;

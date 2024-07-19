@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Grupo = require('./grupoModel'); // Asegúrate de que la ruta sea correcta
 
 const GastoSchema = new mongoose.Schema({
   nombre: {
@@ -11,6 +12,11 @@ const GastoSchema = new mongoose.Schema({
   },
   nCuotas: {
     type: Number,
+    required: true,
+  },
+  grupo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Grupo',
     required: true,
   },
 });
