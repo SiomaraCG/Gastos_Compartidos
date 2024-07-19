@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Grupo = require('./grupoModel'); // Asegúrate de que la ruta sea correcta
+const Grupo = require('./grupoModel'); 
 
 const GastoSchema = new mongoose.Schema({
   nombre: {
