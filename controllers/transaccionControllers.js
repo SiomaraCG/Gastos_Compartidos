@@ -4,6 +4,18 @@ exports.createTransaction = async (req, res) => {
   try {
     const { monto, fecha, usuario, grupo, gasto } = req.body;
 
+    // Verifica que el grupo y el gasto existan
+    const grupoExistente = await Grupo.findById(grupo);
+    const gastoExistente = await Gasto.findById(gasto);
+    
+    if (!grupoExistente) {
+      return res.status(400).json({ error: 'Grupo no encontrado' });
+    }
+
+    if (!gastoExistente) {
+      return res.status(400).json({ error: 'Gasto no encontrado' });
+    }
+
     const nuevaTransaccion = new Transaccion({
       monto,
       fecha,

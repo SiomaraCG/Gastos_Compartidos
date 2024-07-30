@@ -4,9 +4,15 @@ const AutentificacionSchema = new mongoose.Schema({
   correo: {
     type: String,
     required: true,
+    unique: true,
   },
   contrasenia: {
     type: String,
+    required: true,
+  },
+  usuario: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
     required: true,
   },
 });

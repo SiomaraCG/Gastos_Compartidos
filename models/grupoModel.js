@@ -1,22 +1,31 @@
 const mongoose = require('mongoose');
-const Usuario = require('./usuarioModel');
 
-const GrupoSchema = new mongoose.Schema({
-  nombre: {
+const TransaccionSchema = new mongoose.Schema({
+  monto: {
+    type: Number,
+    required: true,
+  },
+  fecha: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
+  usuario: {
     type: String,
     required: true,
   },
-  descripcion: {
-    type: String,
-    required: true,
-  },
-  integrantes: [{
+  grupo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
+    ref: 'Grupo',
     required: true,
-  }],
+  },
+  gasto: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Gasto',
+    required: true,
+  },
 });
 
-const Grupo = mongoose.model('Grupo', GrupoSchema);
+const Transaccion = mongoose.model('Transaccion', TransaccionSchema);
 
-module.exports = Grupo;
+module.exports = Transaccion;

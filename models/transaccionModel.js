@@ -15,7 +15,8 @@ const TransaccionSchema = new mongoose.Schema({
     required: true,
   },
   grupo: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Grupo',
     required: true,
   },
   gasto: {
