@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const Usuario = require('./usuarioModel');
+const Grupo = require('./grupoModel');
+const Gasto = require('./gastoModel');
 
 const TransaccionSchema = new mongoose.Schema({
   monto: {
@@ -8,20 +11,26 @@ const TransaccionSchema = new mongoose.Schema({
   fecha: {
     type: Date,
     default: Date.now,
-    required: true,
   },
   usuario: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
     required: true,
   },
   grupo: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Grupo',
     required: true,
   },
   gasto: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Gasto',
     required: true,
+  },
+  estado: {
+    type: String,
+    enum: ['pendiente', 'pagada'],
+    default: 'pendiente',
   },
 });
 

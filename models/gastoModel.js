@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Grupo = require('./grupoModel'); 
+const Grupo = require('./grupoModel');
 
 const GastoSchema = new mongoose.Schema({
   nombre: {
@@ -10,13 +10,18 @@ const GastoSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  nCuotas: {
-    type: Number,
+  fechaVencimiento: {
+    type: Date,
     required: true,
   },
   grupo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Grupo',
+    required: true,
+  },
+  usuarioCreador: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
     required: true,
   },
 });

@@ -3,20 +3,23 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors'); // Importar cors
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var db = require('./conexions/mongo');
-var gastoRoutes = require('./routes/gastoRoutes')
-var transaccionRoutes = require('./routes/transaccionRoutes')
-var balanceRoutes = require('./routes/balanceRoutes')
-var usuarioRoutes = require('./routes/usuarioRoutes')
-var grupoRoutes = require('./routes/grupoRoutes')
-var autentificacionRoutes = require('./routes/autentificacionRoutes')
+var gastoRoutes = require('./routes/gastoRoutes');
+var transaccionRoutes = require('./routes/transaccionRoutes');
+var balanceRoutes = require('./routes/balanceRoutes');
+var usuarioRoutes = require('./routes/usuarioRoutes');
+var grupoRoutes = require('./routes/grupoRoutes');
+var autentificacionRoutes = require('./routes/autentificacionRoutes');
+var notificacionRoutes = require('./routes/notificacionRoutes');
+var invitacionRoutes = require('./routes/invitacionRoutes');
 
 var app = express();
 
-// view engine setup
+// Configuración del motor de vistas
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -26,6 +29,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Habilitar CORS antes de las rutas
+app.use(cors());
+
+// Configuración de rutas
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', gastoRoutes);
@@ -34,20 +41,21 @@ app.use('/api', balanceRoutes);
 app.use('/api', usuarioRoutes);
 app.use('/api', grupoRoutes);
 app.use('/api', autentificacionRoutes);
+app.use('/api', invitacionRoutes);
+app.use('/api', notificacionRoutes);
 
-
-// catch 404 and forward to error handler
+// Catch 404 y redirigir al manejador de errores
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Manejador de errores
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+  // Configurar locales, solo proporcionar error en desarrollo
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // Renderizar la página de error
   res.status(err.status || 500);
   res.render('error');
 });

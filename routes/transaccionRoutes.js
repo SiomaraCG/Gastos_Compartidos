@@ -1,11 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const transactionController = require('../controllers/transaccionControllers');
+const {
+  createTransaction,
+  getAllTransactions,
+  getTransactionById,
+  updateTransaction,
+  deleteTransaction,
+  pagarTransaccion
+} = require('../controllers/transaccionControllers');
 
-router.post('/transacciones', transactionController.createTransaction);
-router.post('/transacciones/all', transactionController.getAllTransactions); 
-router.post('/transacciones/:id', transactionController.getTransactionById); 
-router.put('/transacciones/:id', transactionController.updateTransaction);
-router.delete('/transacciones/:id', transactionController.deleteTransaction);
+// Ruta para crear una nueva transacción
+router.post('/transaccion', createTransaction);
+
+// Ruta para obtener todas las transacciones
+router.post('/transaccion/all', getAllTransactions);
+
+// Ruta para obtener una transacción por ID
+router.post('/transaccion/:id', getTransactionById);
+
+// Ruta para actualizar una transacción
+router.post('/transaccion/:id/update', updateTransaction);
+
+// Ruta para eliminar una transacción
+router.post('/transaccion/:id/delete', deleteTransaction);
+
+// Ruta para marcar una transacción como pagada
+router.post('/transaccion/:id/pagar', pagarTransaccion);
 
 module.exports = router;
