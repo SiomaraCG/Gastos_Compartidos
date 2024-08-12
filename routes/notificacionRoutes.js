@@ -17,6 +17,6 @@ router.post('/notificacion/:usuarioId', getNotificationsByUser);
 router.post('/notificacion/:id/leido', markAsRead);
 
 // Ruta para eliminar una notificación
-router.delete('/notificacion/:id', deleteNotification);
+router.post('/notificacion/delete/:id', deleteNotification);
 
 module.exports = router;

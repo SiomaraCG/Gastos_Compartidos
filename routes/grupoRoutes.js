@@ -12,10 +12,10 @@ router.post('/grupos/all', grupoController.getAllGroups);
 router.post('/grupos/:id', grupoController.getGroupById);
 
 // Actualizar un grupo por su ID
-router.put('/grupos/:id', grupoController.updateGroup);
+router.post('/grupos/update/:id', grupoController.updateGroup);
 
 // Eliminar un grupo por su ID
-router.delete('/grupos/:id', grupoController.deleteGroup);
+router.post('/grupos/delete/:id', grupoController.deleteGroup);
 
 
 module.exports = router;
