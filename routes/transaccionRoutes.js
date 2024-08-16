@@ -6,7 +6,8 @@ const {
   getTransactionById,
   updateTransaction,
   deleteTransaction,
-  pagarTransaccion
+  pagarTransaccion,
+  getTransactionsByUserId
 } = require('../controllers/transaccionControllers');
 
 // Ruta para crear una nueva transacción
@@ -27,4 +28,5 @@ router.post('/transaccion/:id/delete', deleteTransaction);
 // Ruta para marcar una transacción como pagada
 router.post('/transaccion/:id/pagar', pagarTransaccion);
 
+router.post('/transaccion/user/:userId', getTransactionsByUserId);
 module.exports = router;

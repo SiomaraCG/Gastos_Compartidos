@@ -7,9 +7,15 @@ const Notificacion = require('../models/notificacionModel');
 exports.createExpense = async (req, res) => {
   try {
     const { nombre, precio, grupoId, fechaVencimiento, usuarioCreador } = req.body;
+    // Agregar log para verificar el grupoId recibido
+    console.log('Buscando grupo con ID:', grupoId);
 
     // Verificar que el grupo existe
     const grupo = await Grupo.findById(grupoId).populate('integrantes');
+
+    // Agregar log para verificar el resultado de la consulta
+    console.log('Grupo encontrado:', grupo);
+
     if (!grupo) return res.status(404).json({ error: 'Grupo no encontrado' });
 
     // Crear el nuevo gasto

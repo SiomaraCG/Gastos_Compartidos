@@ -17,5 +17,7 @@ router.post('/grupos/update/:id', grupoController.updateGroup);
 // Eliminar un grupo por su ID
 router.post('/grupos/delete/:id', grupoController.deleteGroup);
 
+router.post('/grupos/usuario/:userId', grupoController.getGroupsByUserId);
+
 
 module.exports = router;

@@ -109,3 +109,21 @@ exports.pagarTransaccion = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getTransactionsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log('UserId:', userId); // Verifica el valor de userId
+    const transactions = await Transaccion.find({ usuario: userId }); // Asegúrate de usar 'usuario' si ese es el campo en tu esquema
+    console.log('Transactions:', transactions); // Verifica el valor de transactions
+
+    if (!transactions || transactions.length === 0) {
+      return res.status(404).json({ error: 'No transactions found' });
+    }
+
+    res.status(200).json(transactions);
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

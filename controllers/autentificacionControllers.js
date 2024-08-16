@@ -1,70 +1,69 @@
-const Autentificacion = require('../models/autentificacionModel');
 const Usuario = require('../models/usuarioModel');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-exports.createAutentificacion = async (req, res) => {
+// Registrar un nuevo usuario
+exports.register = async (req, res) => {
   try {
-    const { usuario, correo, contrasenia } = req.body;
+    const { nombre, email, contrasena } = req.body;
 
-    // Verifica que el usuario exista
-    const usuarioExistente = await Usuario.findById(usuario);
-    if (!usuarioExistente) {
-      return res.status(400).json({ error: 'Usuario no encontrado' });
+    // Validación básica
+    if (!nombre || !email || !contrasena) {
+      return res.status(400).json({ message: 'Faltan datos en la solicitud' });
     }
 
-    const nuevoAutentificacion = new Autentificacion({
-      usuario,
-      correo,
-      contrasenia,
+    // Verificar si el usuario ya existe
+    const usuarioExistente = await Usuario.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(400).json({ message: 'El usuario ya existe' });
+    }
+
+    // Cifrar la contraseña antes de guardar
+    const contrasenaCifrada = await bcrypt.hash(contrasena, 10);
+
+    // Crear y guardar el nuevo usuario
+    const nuevoUsuario = new Usuario({
+      nombre,
+      email,
+      contrasena: contrasenaCifrada,
     });
 
-    const autentificacion = await nuevoAutentificacion.save();
-    res.status(201).json({ message: 'Autenticación creada exitosamente', autentificacion });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await nuevoUsuario.save();
+    res.status(201).json({ message: 'Usuario registrado exitosamente' });
+  } catch (error) {
+    console.error('Error en el registro:', error);
+    res.status(500).json({ message: 'Error interno del servidor', error });
   }
 };
 
-exports.getAllAutentificaciones = async (req, res) => {
+// Iniciar sesión de un usuario
+exports.login = async (req, res) => {
   try {
-    const autentificaciones = await Autentificacion.find().populate('usuario', 'nombre');
-    res.status(200).json(autentificaciones);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    const { email, contrasena } = req.body;
 
-exports.getAutentificacionById = async (req, res) => {
-  try {
-    const autentificacion = await Autentificacion.findById(req.params.id).populate('usuario', 'nombre');
-    if (!autentificacion) return res.status(404).json({ error: 'Autenticación no encontrada' });
-    res.status(200).json(autentificacion);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    // Validación básica
+    if (!email || !contrasena) {
+      return res.status(400).json({ message: 'Faltan datos en la solicitud' });
+    }
 
-exports.updateAutentificacion = async (req, res) => {
-  try {
-    const { correo, contrasenia } = req.body;
-    const autentificacion = await Autentificacion.findByIdAndUpdate(
-      req.params.id,
-      { correo, contrasenia },
-      { new: true }
-    ).populate('usuario', 'nombre');
-    
-    if (!autentificacion) return res.status(404).json({ error: 'Autenticación no encontrada' });
-    res.status(200).json({ message: 'Autenticación actualizada exitosamente', autentificacion });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    // Verificar si el usuario existe
+    const usuario = await Usuario.findOne({ email });
+    if (!usuario) {
+      return res.status(400).json({ message: 'Usuario no encontrado' });
+    }
 
-exports.deleteAutentificacion = async (req, res) => {
-  try {
-    const autentificacion = await Autentificacion.findByIdAndDelete(req.params.id);
-    if (!autentificacion) return res.status(404).json({ error: 'Autenticación no encontrada' });
-    res.status(200).json({ message: 'Autenticación eliminada exitosamente' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    // Comparar la contraseña cifrada
+    const isMatch = await bcrypt.compare(contrasena, usuario.contrasena);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Contraseña incorrecta' });
+    }
+
+    // Crear un token JWT
+    const token = jwt.sign({ userId: usuario._id }, process.env.JWT_SECRET || 'secreto', { expiresIn: '1h' });
+
+    res.status(200).json({ token, message: 'Login exitoso' });
+  } catch (error) {
+    console.error('Error en el login:', error);
+    res.status(500).json({ message: 'Error en el servidor', error });
   }
 };

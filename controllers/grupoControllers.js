@@ -70,3 +70,23 @@ exports.deleteGroup = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getGroupsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log('UserId:', userId); // Verifica el valor de userId
+
+    // Encuentra todos los grupos donde el usuario es integrante
+    const grupos = await Grupo.find({ integrantes: userId }).populate('integrantes', 'nombre');
+    console.log('Grupos:', grupos); // Verifica el valor de grupos
+
+    if (!grupos || grupos.length === 0) {
+      return res.status(404).json({ error: 'No groups found' });
+    }
+
+    res.status(200).json(grupos);
+  } catch (error) {
+    console.error('Error fetching groups:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
