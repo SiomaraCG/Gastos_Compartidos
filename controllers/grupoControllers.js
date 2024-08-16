@@ -53,13 +53,29 @@ exports.updateGroup = async (req, res) => {
       return res.status(400).json({ error: 'Presupuesto inválido' });
     }
 
-    const grupo = await Grupo.findByIdAndUpdate(req.params.id, { nombre, descripcion, integrantes, presupuesto }, { new: true }).populate('integrantes', 'nombre');
-    if (!grupo) return res.status(404).json({ error: 'Grupo no encontrado' });
-    res.status(200).json({ message: 'Grupo actualizado exitosamente', grupo });
+    // Encuentra el grupo y actualiza solo los campos proporcionados
+    const grupo = await Grupo.findById(req.params.id);
+    if (!grupo) {
+      return res.status(404).json({ error: 'Grupo no encontrado' });
+    }
+
+    if (nombre) grupo.nombre = nombre;
+    if (descripcion) grupo.descripcion = descripcion;
+    if (integrantes) grupo.integrantes = integrantes;
+    if (presupuesto) grupo.presupuesto = presupuesto;
+
+    // Guarda el grupo actualizado
+    await grupo.save();
+
+    // Devuelve el grupo actualizado con los detalles de los integrantes
+    const grupoActualizado = await Grupo.findById(grupo._id).populate('integrantes', 'nombre');
+    
+    res.status(200).json({ message: 'Grupo actualizado exitosamente', grupo: grupoActualizado });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.deleteGroup = async (req, res) => {
   try {

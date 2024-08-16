@@ -95,13 +95,18 @@ exports.respondToInvitation = async (req, res) => {
     const invitacionId = req.params.id;
     const { estado } = req.body;
 
+    // Buscar la invitación por ID
     const invitacion = await Invitacion.findById(invitacionId);
-    if (!invitacion) return res.status(404).json({ error: 'Invitación no encontrada' });
+    if (!invitacion) {
+      return res.status(404).json({ error: 'Invitación no encontrada' });
+    }
 
+    // Verificar que la invitación esté pendiente
     if (invitacion.estado !== 'pendiente') {
       return res.status(400).json({ error: 'La invitación ya ha sido respondida' });
     }
 
+    // Actualizar el estado de la invitación
     invitacion.estado = estado;
     invitacion.fechaRespuesta = new Date();
     await invitacion.save();
@@ -109,14 +114,22 @@ exports.respondToInvitation = async (req, res) => {
     // Si la invitación fue aceptada, agregar al usuario al grupo
     if (estado === 'aceptada') {
       const grupo = await Grupo.findById(invitacion.grupo);
-      if (grupo) {
-        grupo.integrantes.push(invitacion.usuario);
+      if (!grupo) {
+        return res.status(404).json({ error: 'Grupo no encontrado' });
+      }
+
+      // Verificar si el usuario ya es miembro del grupo
+      const usuarioId = invitacion.usuario.toString();
+      if (!grupo.integrantes.includes(usuarioId)) {
+        grupo.integrantes.push(usuarioId);
         await grupo.save();
 
         // Crear una notificación para el usuario que ha aceptado
         const mensaje = `Te has unido al grupo "${grupo.nombre}" exitosamente.`;
-        const notificacion = new Notificacion({ usuario: invitacion.usuario, mensaje });
+        const notificacion = new Notificacion({ usuario: usuarioId, mensaje });
         await notificacion.save();
+      } else {
+        return res.status(400).json({ error: 'El usuario ya es miembro del grupo' });
       }
     }
 
