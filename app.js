@@ -43,6 +43,19 @@ app.use('/api', grupoRoutes);
 app.use('/api', autentificacionRoutes);
 app.use('/api', invitacionRoutes);
 app.use('/api', notificacionRoutes);
+app.post('/refresh-token', (req, res) => {
+  const refreshToken = req.body.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+
+  // Verificar el refresh token y emitir un nuevo JWT
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+
+    // Emitir un nuevo JWT
+    const accessToken = jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    res.json({ accessToken });
+  });
+});
 
 // Catch 404 y redirigir al manejador de errores
 app.use(function(req, res, next) {
