@@ -16,6 +16,7 @@ var grupoRoutes = require('./routes/grupoRoutes');
 var autentificacionRoutes = require('./routes/autentificacionRoutes');
 var notificacionRoutes = require('./routes/notificacionRoutes');
 var invitacionRoutes = require('./routes/invitacionRoutes');
+var pagoRoutes = require('./routes/pagoRoutes');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/api', grupoRoutes);
 app.use('/api', autentificacionRoutes);
 app.use('/api', invitacionRoutes);
 app.use('/api', notificacionRoutes);
+app.use('/api', pagoRoutes);
 app.post('/refresh-token', (req, res) => {
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
